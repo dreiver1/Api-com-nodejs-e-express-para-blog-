@@ -7,6 +7,19 @@ const morgan = require('morgan');
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
+app.use((request, response, next) => {
+    response.header('Acess-Control-Allow-Origin', '*');
+    response.header(
+        'Acess-Control-Allow-header',
+         'Origin, X-Requested-Whidt, Content-Type, Accept, Authorization'
+         );
+    if(request.method === 'OPTIONS'){
+        response.header('Access-Control-Allow-Headers', 'GET, POST, PUT, PATH, DELETE');
+        return response.status(200).send({})
+    }
+
+    next();
+})
 
 app.use("/posts", posts);
 
