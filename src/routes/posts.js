@@ -3,11 +3,17 @@ const express = require('express');
 const router = express.Router();
 const connection = require('../mysql').pool;
 router.get("/", (request, response) => {
-    response.status(200).json(
-        {
-            message: 'funcionou dentro da rota posts',
-        }
-    );
+    // response.status(200).json(
+    //     {
+    //         message: 'funcionou dentro da rota posts',
+    //     }
+    // );
+    connection.connect();
+    connection.query("SELECT * FROM posts", 
+        (error, result, field)=>{
+        if (error) {return response.status(500).send({message: error, response: null})}
+        return response.status(200).send({response: result})
+    })
 });
 
 router.post("/", (request, response) => {
@@ -23,41 +29,16 @@ router.post("/", (request, response) => {
         "INSERT INTO posts (title, image, date, description) VALUES(?, ?, ?, ?)",
         [post.title, post.image, post.date, post.description],
         (error, result, field)=>{
-            if (error) {
-                return response.status(500).send({
-                    message: error,
-                    response: null,
-                })
-            }else{
-                response.status(201).json(
-                    {
-                        Message: 'Publicação inserida com sucesso',
-                        Id_post: result.insertid,
-                    }
-                );
-            }
-        })
+            if (error) {return response.status(500).send({message: error, response: null})}
+            response.status(201).json(
+                {
+                    Message: 'Publicação inserida com sucesso',
+                    Id_post: result.insertid,
+                }
+                
+            )}
+    )
     connection.end();
 })
 
 module.exports = router;
-
-// "INSERT INTO posts (title, image, description, date) VALUES(?, ?, ?, ?)",
-//             [post.title, post.image, post.description, post.date],
-//             (error, result, field)=>{
-//                 connection.release();
-//                 if (error) {
-//                     return response.status(500).send({
-//                         message: error,
-//                         response: null,
-//                     })
-//                 }else{
-//                     response.status(201).json(
-//                         {
-//                             Message: 'Publicação inserida com sucesso',
-//                             Id_post: result.insertid,
-//                         }
-//                     );
-
-//                 }
-//             }
