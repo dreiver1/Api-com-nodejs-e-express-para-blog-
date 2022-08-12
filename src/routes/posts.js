@@ -1,5 +1,7 @@
+require('dotenv').config();
 const express = require('express');
 const router = express.Router();
+const connection = require('../mysql').pool;
 router.get("/", (request, response) => {
     response.status(200).json(
         {
@@ -15,10 +17,47 @@ router.post("/", (request, response) => {
         description: request.body.description,
         date: request.body.date,
     }
-    response.status(200).send({
-        message: 'funcionou dentro da rota post',
-        post: post,
-    })
+
+    connection.connect();
+    connection.query(
+        "INSERT INTO posts (title, image, date, description) VALUES(?, ?, ?, ?)",
+        [post.title, post.image, post.date, post.description],
+        (error, result, field)=>{
+            if (error) {
+                return response.status(500).send({
+                    message: error,
+                    response: null,
+                })
+            }else{
+                response.status(201).json(
+                    {
+                        Message: 'Publicação inserida com sucesso',
+                        Id_post: result.insertid,
+                    }
+                );
+            }
+        })
+    connection.end();
 })
 
 module.exports = router;
+
+// "INSERT INTO posts (title, image, description, date) VALUES(?, ?, ?, ?)",
+//             [post.title, post.image, post.description, post.date],
+//             (error, result, field)=>{
+//                 connection.release();
+//                 if (error) {
+//                     return response.status(500).send({
+//                         message: error,
+//                         response: null,
+//                     })
+//                 }else{
+//                     response.status(201).json(
+//                         {
+//                             Message: 'Publicação inserida com sucesso',
+//                             Id_post: result.insertid,
+//                         }
+//                     );
+
+//                 }
+//             }

@@ -19,7 +19,7 @@ app.use((request, response, next) => {
     }
 
     next();
-})
+});
 
 app.use("/posts", posts);
 
@@ -34,6 +34,6 @@ app.use((error, request, response, next)=>{
     return response.send({
         erro: { message: error.message }
     });
-})
+});
 
 module.exports = app;
