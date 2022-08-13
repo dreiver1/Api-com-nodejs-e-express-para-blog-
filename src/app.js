@@ -1,5 +1,6 @@
 const  express = require('express');
 const posts = require('./routes/posts');
+const usuarios = require('./routes/usuarios');
 const app = express();
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
@@ -22,6 +23,7 @@ app.use((request, response, next) => {
 });
 
 app.use("/posts", posts);
+app.use("/usuarios", usuarios);
 
 app.use((request, respose, next)=>{
     const erro  = new Error('Paginna não encontrada');
