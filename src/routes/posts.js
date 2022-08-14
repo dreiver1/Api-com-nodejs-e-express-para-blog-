@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const connection = require('../mysql').pool;
+const login = require("../middlewares/login")
 
 router.get("/", (request, response) => {
     connection.connect();
@@ -54,14 +55,7 @@ router.get("/:id_post", (request, response) => {
     connection.end();
 });
 
-router.post("/", (request, response) => {
-    const post = {
-        title: request.body.title,
-        image: request.body.image,
-        description: request.body.description,
-        date: request.body.date,
-    }
-
+router.post("/", login, (request, response) => {
     connection.connect();
     connection.query(
         "INSERT INTO posts (title, image, date, description) VALUES(?, ?, ?, ?)",
@@ -81,7 +75,6 @@ router.post("/", (request, response) => {
                             URL: "http://localhost:3000/posts",
                         }
                     }
-                
             }        
             return response.status(201).json({resposta})
     })
