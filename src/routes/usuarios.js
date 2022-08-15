@@ -7,27 +7,27 @@ const jwt = require('jsonwebtoken')
 
 router.post("/cadastro", (request, response)=>{
     connection.getConnection((error, result)=>{
-        if(error){return response.status(500).json({message: error})}
+        if(sqlError){return response.status(500).json({message: sqlError})}
         bcrypt.hash(request.body.senha, 10, (error, hash)=>{
             if(error){return response.status(500).json({message: error})}
-            connection.query("SELECT * FROM usuarios WHERE email = ?", [request.body.email], (error, result)=>{
+            connection.query("SELECT * FROM usuarios WHERE email = ?", [request.body.email], (error, resultFromSqlQuery)=>{
                 if(error){ return response.status(500).json({message: error})}
-                if(result.length > 0){
+                if(resultFromSqlQuery.length > 0){
                     return response.status(409).json({message: "usuario já cadastrado."})
                 }else{
                     connection.query(
                         `INSERT INTO usuarios (email, senha) VALUES (?,?)`, 
                         [request.body.email, hash], 
-                        (error,  resultado)=>{
+                        (error,  resultFromSqlQuery)=>{
                             if(error){return response.status(500).json({message: error})}
-                            var resposta = {
+                            var respostaParaRequest = {
                                 message: "usuario cadastrado com sucesso",
                                 usuarioCriado: {
-                                    id_usuario: resultado.insertId,
+                                    id_usuario: resultFromSqlQuery.insertId,
                                     email: request.body.email,
                                 }
                             }
-                            return response.status(201).json({resposta})
+                            return response.status(201).json({respostaParaRequest})
                         })
                 }
             
