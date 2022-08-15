@@ -1,5 +1,7 @@
 {
     "sqltools.connections": [
+    
+    
         {
             "mysqlOptions": {
                 "authProtocol": "default"
