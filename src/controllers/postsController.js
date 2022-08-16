@@ -4,7 +4,7 @@ const connection = require('../mysql').pool;
 exports.getAllPosts = (request, response) => {
     connection.getConnection((error, connection)=>{
         if (error) {return response.status(500).send({message: error, response: null})}
-        connection.query("SELECT * FROM posts", (error, result, field)=>{
+        connection.query("SELECT * FROM puplications", (error, result, field)=>{
         connection.release();
         if (error) {return response.status(500).send({message: error, response: null})}
         const resposta = {
@@ -29,7 +29,7 @@ exports.getAllPosts = (request, response) => {
 
 exports.getPostSpecifc = (request, response) => {
     connection.getConnection((error, connection)=>{
-        connection.query("SELECT * FROM posts WHERE id_posts = ?", [request.params.id_post], 
+        connection.query("SELECT * FROM puplications WHERE id_post = ?", [request.params.id_post], 
         (error, result, field)=>{
         connection.release();
         if (error) {return response.status(500).send({message: error, response: null})}
@@ -55,7 +55,7 @@ exports.getPostSpecifc = (request, response) => {
 
 exports.newPost = (request, response) => {
     connection.getConnection((error, connection)=>{
-        connection.query("INSERT INTO posts (title, image, date, description) VALUES(?, ?, ?, ?)",
+        connection.query("INSERT INTO puplications (title, image, date, description) VALUES(?, ?, ?, ?)",
         [request.body.title, request.body.image, request.body.date, request.body.description],
         (error, result, field)=>{
             connection.release();
