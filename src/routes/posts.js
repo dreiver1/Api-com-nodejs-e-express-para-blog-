@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const connection = require('../mysql').pool;
 
-const loginObrigatorio = require("../middlewares/loginObrigatorio")
+const loginObrigatorio = require("../middlewares/login")
 const postsController = require("../controllers/postsController")
 
 router.get("/", postsController.getAllPosts);
