@@ -1,9 +1,10 @@
 require('dotenv').config();
-const connection = require('../mysql').pool;
+const connection = require('../mysql');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 
 exports.createNewUser = (request, response)=>{
+    
     connection.getConnection((sqlError, result)=>{
         if(sqlError){return response.status(500).json({message: sqlError})}
         bcrypt.hash(request.body.senha, 10, (error, hash)=>{

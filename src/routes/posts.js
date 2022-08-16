@@ -6,14 +6,14 @@ const connection = require('../mysql').pool;
 const loginObrigatorio = require("../middlewares/login")
 const postsController = require("../controllers/postsController")
 
-router.get("/", postsController.getAllPosts);
+router.get("/", postsController.pegarTodosPosts);
 
-router.get("/:id_post", postsController.getPostSpecifc);
+router.get("/:id_post", postsController.pegarPostEspecifico);
 
-router.post("/", loginObrigatorio, postsController.newPost);
+router.post("/", loginObrigatorio, postsController.criarPost);
 
-router.put("/:id_post", loginObrigatorio, postsController.pathPost);
+router.put("/:id_post", loginObrigatorio, postsController.alterarPost);
 
-router.delete("/:id_post", loginObrigatorio, postsController.deletePost);
+router.delete("/:id_post", loginObrigatorio, postsController.excluirPost);
 
 module.exports = router;

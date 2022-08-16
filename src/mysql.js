@@ -1,5 +1,6 @@
 const mysql = require('mysql');
-const dbConnectionPool = mysql.createPool({
+const Pool = mysql.createPool({
+    connectionLimit : 1000,
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
@@ -7,6 +8,20 @@ const dbConnectionPool = mysql.createPool({
     port: 3306
 });
 
-exports.pool = dbConnectionPool; 
+
+
+exports.execute = (query, params=[]) => {
+    return new Promise((resolve, reject) => {
+        Pool.query(query, params, (error, result, fields)=>{
+            if(error){
+                reject(error);
+            }else{
+                resolve(result);
+            }
+        });
+    });
+};
+
+exports.pool = Pool; 
 
 
