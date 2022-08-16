@@ -120,7 +120,7 @@ exports.pathPost = (request, response) => {
 exports.deletePost = (request, response) => {
     connection.getConnection((error, connection)=>{
         if (error) {return response.status(500).send({message: error, response: null})}
-        connection.query("DELETE FROM posts WHERE id_posts =?", [request.params.id_post], (error, result)=>{
+        connection.query("DELETE FROM publications WHERE id_posts =?", [request.params.id_post], (error, result)=>{
             connection.release();
             if (error) {return response.status(500).send({message: error, response: null})}
 
