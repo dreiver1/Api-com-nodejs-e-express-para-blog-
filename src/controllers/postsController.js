@@ -55,8 +55,8 @@ exports.getPostSpecifc = (request, response) => {
 
 exports.newPost = (request, response) => {
     connection.getConnection((error, connection)=>{
-        connection.query("INSERT INTO puplications (title, image, date, description) VALUES(?, ?, ?, ?)",
-        [request.body.title, request.body.image, request.body.date, request.body.description],
+        connection.query("INSERT INTO puplications (title, image, date, description, body, associetilink, categories_id_categorie) VALUES(?, ?, ?, ?, ?, ?, ?)",
+        [request.body.title, request.body.image, request.body.date, request.body.description, request.body.body, request.body.associetilink, request.body.categories_id_categorie],
         (error, result, field)=>{
             connection.release();
             if (error) {return response.status(500).send({message: error, response: null})}
@@ -67,6 +67,8 @@ exports.newPost = (request, response) => {
                         image: request.body.image,
                         date: request.body.date,
                         description: request.body.description,
+                        body: request.body.body,
+                        associetilink: request.body.associetilink,
                         request: {
                             tipo: "POST",
                             descricacao: "Cria uma nova pubicação",
