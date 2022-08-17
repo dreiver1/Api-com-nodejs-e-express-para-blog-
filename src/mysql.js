@@ -1,5 +1,6 @@
 const mysql = require('mysql');
-const Pool = mysql.createPool({
+
+const connection = mysql.createPool({
     connectionLimit : 1000,
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
@@ -11,17 +12,19 @@ const Pool = mysql.createPool({
 
 
 exports.execute = (query, params=[]) => {
+    console.log("bateu aqui")
     return new Promise((resolve, reject) => {
-        Pool.query(query, params, (error, result, fields)=>{
+        connection.query(query, params, (error, result, fields)=>{
             if(error){
                 reject(error);
             }else{
                 resolve(result);
+                return result;
             }
         });
     });
 };
 
-exports.pool = Pool; 
+
 
 
