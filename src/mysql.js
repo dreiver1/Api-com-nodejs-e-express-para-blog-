@@ -19,7 +19,6 @@ exports.execute = (query, params=[]) => {
                 reject(error);
             }else{
                 resolve(result);
-                return result;
             }
         });
     });

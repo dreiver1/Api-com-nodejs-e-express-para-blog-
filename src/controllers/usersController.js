@@ -19,6 +19,7 @@ exports.createNewUser = async (request, response)=>{
                 email: request.body.email,
                 id_usuario: adicionaNovoUsuario.insertId
             }
+            console.log(hash)
             return response.status(200).json(resposta)
         })
     } catch (error) {
@@ -31,14 +32,14 @@ exports.login = async (request, response)=>{
     try {
         const query = `SELECT * FROM usuarios WHERE email = ?`
         const email = [request.body.email]
-        const fazLogin = await connectionPoll.execute( query, email)
-        if(fazLogin.length < 1){return response.status(401).json({message: "falha na autenticação"})}
-        var userID = fazLogin[0].id_usuario
-        var userEmail = fazLogin[0].email
-        console.log(userEmail + userID)
-        bcrypt.compare(request.body.senha, fazLogin[0].senha, (error, result) => {
-            if(error){return response.status(401).json({message: "falha na autenticação"})}
-            if(fazLogin){
+        const pegaEmailSenha = await connectionPoll.execute( query, email)
+        if(pegaEmailSenha.length < 1){return response.status(401).json({message: "falha na autenticação"})}
+        var userID = pegaEmailSenha[0].id_usuario
+        var userEmail = pegaEmailSenha[0].email
+        var userPasswd = pegaEmailSenha[0].senha
+        console.log(pegaEmailSenha)
+        if(!pegaEmailSenha){return response.status(401).json({message: "falha na autenticação"})}
+            if(bcrypt.compare(request.body.senha, userPasswd)){
                 const token = jwt.sign({
                     id_usuario: userID,
                     email: userEmail
@@ -49,8 +50,6 @@ exports.login = async (request, response)=>{
                     message: "autencado com sucesso",
                     token: token
                 })}
-            if(!fazLogin){return response.status(401).json({message: "falha na autenticação"})}
-        })
 
     } catch (error) {
         return response.status(500).json({error: error});
